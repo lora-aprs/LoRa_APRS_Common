@@ -40,6 +40,17 @@
 #endif
 
 
+#ifdef TTGO_T_Beam_V0_7
+	#define GPS_RX			15
+	#define GPS_TX			12
+#endif
+
+#ifdef TTGO_T_Beam_V1_0
+	#define GPS_RX			12
+	#define GPS_TX			34
+#endif
+
+
 #undef KEY_BUILTIN
 #if defined(TTGO_T_Beam_V0_7)
 	#define KEY_BUILTIN		39
