@@ -90,6 +90,7 @@ void LoRa_APRS::setTxFrequency(long frequency)
 	_TxFrequency = frequency;
 }
 
+// cppcheck-suppress unusedFunction
 long LoRa_APRS::getTxFrequency() const
 {
 	return _TxFrequency;
