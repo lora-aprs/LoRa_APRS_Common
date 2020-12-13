@@ -4,6 +4,12 @@
 #undef OLED_SDA
 #undef OLED_SCL
 #undef OLED_RST
+#undef LORA_SCK
+#undef LORA_MISO
+#undef LORA_MOSI
+#undef LORA_CS
+#undef LORA_RST
+#undef LORA_IRQ
 
 #if defined(HELTEC_WIFI_LORA_32_V1) || defined(HELTEC_WIFI_LORA_32_V2) || defined(TTGO_LORA32_V1)
 	#define OLED_SDA		4
@@ -15,14 +21,35 @@
 	#define OLED_SCL		22
 #endif
 
+#if defined(HELTEC_WIFI_LORA_32_V1) || defined(HELTEC_WIFI_LORA_32_V2) || defined(TTGO_LORA32_V1) || defined(TTGO_LORA32_V2) || defined(TTGO_T_Beam_V0_7) || defined(TTGO_T_Beam_V1_0)
+	#define LORA_SCK		5
+	#define LORA_MISO		19
+	#define LORA_MOSI		27
+	#define LORA_CS			18
+	#define LORA_RST		14
+	#define LORA_IRQ		26
+#endif
+
 #ifdef TRACKERD
 	#define OLED_SDA		5
 	#define OLED_SCL		4
+	#define LORA_SCK		18
+	#define LORA_MISO		19
+	#define LORA_MOSI		23
+	#define LORA_CS			16
+	#define LORA_RST		14
+	#define LORA_IRQ		26
 #endif
 
 #ifdef ETH_BOARD
 	#define OLED_SDA		33
 	#define OLED_SCL		32
+	#define LORA_SCK		14
+	#define LORA_MISO		2
+	#define LORA_MOSI		15
+	#define LORA_CS			12
+	#define LORA_RST		4
+	#define LORA_IRQ		36
 	#define ETH_POWER_PIN	-1
 	#define ETH_TYPE		ETH_PHY_LAN8720
 	#define ETH_ADDR		0

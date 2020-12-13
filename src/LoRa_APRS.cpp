@@ -1,22 +1,11 @@
 #include <LoRa_APRS.h>
+#include <pins.h>
 
 LoRa_APRS::LoRa_APRS()
 	: _LastReceivedMsg(0), _RxFrequency(LORA_RX_FREQUENCY), _TxFrequency(LORA_TX_FREQUENCY)
 {
 	SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
 	setPins(LORA_CS, LORA_RST, LORA_IRQ);
-
-	setSpreadingFactor(LORA_SPREADING_FACTOR);
-	setSignalBandwidth(LORA_SIGNAL_BANDWIDTH);
-	setCodingRate4(LORA_CODING_RATE4);
-	enableCrc();
-}
-
-LoRa_APRS::LoRa_APRS(int sck, int miso, int mosi, int cs, int rst, int irq)
-	: _LastReceivedMsg(0), _RxFrequency(LORA_RX_FREQUENCY), _TxFrequency(LORA_TX_FREQUENCY)
-{
-	SPI.begin(sck, miso, mosi, cs);
-	setPins(cs, rst, irq);
 
 	setSpreadingFactor(LORA_SPREADING_FACTOR);
 	setSignalBandwidth(LORA_SIGNAL_BANDWIDTH);

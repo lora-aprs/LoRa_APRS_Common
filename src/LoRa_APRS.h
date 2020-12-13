@@ -16,7 +16,6 @@ class LoRa_APRS : public LoRaClass
 {
 public:
 	LoRa_APRS();
-	LoRa_APRS(int sck, int miso, int mosi, int cs, int rst, int irq);
 	
 	bool hasMessage();
 	std::shared_ptr<APRSMessage> getMessage();
