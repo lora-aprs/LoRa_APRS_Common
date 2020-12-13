@@ -1,0 +1,16 @@
+name: Build check
+
+on:
+  push:
+    paths-ignore:
+      - '*.md'
+
+jobs:
+  PlatformIO-Check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt-get install python3-setuptools python3-wheel
+      - run: pip3 install platformio
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - uses: actions/checkout@v2
+      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high -v
