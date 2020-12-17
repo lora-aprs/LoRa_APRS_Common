@@ -7,24 +7,12 @@ BoardConfig::BoardConfig(
 	uint8_t oledsda, uint8_t oledscl, uint8_t oledaddr, uint8_t oledreset,
 	uint8_t lorasck, uint8_t loramiso, uint8_t loramosi, uint8_t loracs, uint8_t lorareset, uint8_t lorairq,
 	bool needcheckpowerchip, bool powercheckstatus)
+	:
+		Name(name), Type(type),
+		OledSda(oledsda), OledScl(oledscl), OledAddr(oledaddr), OledReset(oledreset),
+		LoraSck(lorasck), LoraMiso(loramiso), LoraMosi(loramosi), LoraCS(loracs), LoraReset(lorareset), LoraIRQ(lorairq),
+		needCheckPowerChip(needcheckpowerchip), powerCheckStatus(powercheckstatus)
 {
-	Name = name;
-	Type = type;
-
-	OledSda = oledsda;
-	OledScl = oledscl;
-	OledAddr = oledaddr;
-	OledReset = oledreset;
-
-	LoraSck = lorasck;
-	LoraMiso = loramiso;
-	LoraMosi = loramosi;
-	LoraCS = loracs;
-	LoraReset = lorareset;
-	LoraIRQ = lorairq;
-
-	needCheckPowerChip = needcheckpowerchip;
-	powerCheckStatus = powercheckstatus;
 }
 
 BoardFinder::BoardFinder()
@@ -94,14 +82,15 @@ std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig()
 
 std::shared_ptr<BoardConfig> BoardFinder::getBoardConfig(String name)
 {
-	for(std::shared_ptr<BoardConfig> boardconf : _boardConfigs)
+	std::_List_iterator<std::shared_ptr<BoardConfig>> elem = std::find_if(_boardConfigs.begin(), _boardConfigs.end(), [&](std::shared_ptr<BoardConfig> conf)
 	{
-		if(boardconf->Name == name)
-		{
-			return boardconf;
-		}
+		return conf->Name == name;
+	});
+	if(elem == _boardConfigs.end())
+	{
+		return 0;
 	}
-	return 0;
+	return *elem;
 }
 
 bool BoardFinder::checkOledConfig(std::shared_ptr<BoardConfig> boardConfig)
