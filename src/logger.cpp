@@ -24,12 +24,18 @@
 #define LOG_COLOR_V			LOG_COLOR(LOG_COLOR_CYAN)
 
 Logger::Logger()
-	: _serial(Serial), _level(DEBUG_LEVEL_DEBUG), _printIsNewline(true)
+	:
+#ifdef NO_GLOBAL_INSTANCES
+_serial(0),
+#else
+_serial(&Serial),
+#endif
+_level(DEBUG_LEVEL_DEBUG), _printIsNewline(true)
 {
 }
 
 // cppcheck-suppress unusedFunction
-void Logger::setSerial(const HardwareSerial & serial)
+void Logger::setSerial(HardwareSerial * serial)
 {
 	_serial = serial;
 }
@@ -45,7 +51,7 @@ void Logger::printA(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_NONE);
 	printHeader(DEBUG_LEVEL_NONE, file, line, false);
-	_serial.print(text);
+	_serial->print(text);
 	printEndColor(DEBUG_LEVEL_NONE);
 }
 
@@ -54,7 +60,7 @@ void Logger::printE(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_ERROR);
 	printHeader(DEBUG_LEVEL_ERROR, file, line, false);
-	_serial.print(text);
+	_serial->print(text);
 	printEndColor(DEBUG_LEVEL_ERROR);
 }
 
@@ -63,7 +69,7 @@ void Logger::printlnA(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_NONE);
 	printHeader(DEBUG_LEVEL_NONE, file, line, true);
-	_serial.println(text);
+	_serial->println(text);
 	printEndColor(DEBUG_LEVEL_NONE);
 }
 
@@ -72,7 +78,7 @@ void Logger::printlnE(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_ERROR);
 	printHeader(DEBUG_LEVEL_ERROR, file, line, true);
-	_serial.println(text);
+	_serial->println(text);
 	printEndColor(DEBUG_LEVEL_ERROR);
 }
 
@@ -83,7 +89,7 @@ void Logger::printV(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_VERBOSE);
 		printHeader(DEBUG_LEVEL_VERBOSE, file, line, false);
-		_serial.print(text);
+		_serial->print(text);
 		printEndColor(DEBUG_LEVEL_VERBOSE);
 	}
 }
@@ -95,7 +101,7 @@ void Logger::printD(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_DEBUG);
 		printHeader(DEBUG_LEVEL_DEBUG, file, line, false);
-		_serial.print(text);
+		_serial->print(text);
 		printEndColor(DEBUG_LEVEL_DEBUG);
 	}
 }
@@ -107,7 +113,7 @@ void Logger::printI(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_INFO);
 		printHeader(DEBUG_LEVEL_INFO, file, line, false);
-		_serial.print(text);
+		_serial->print(text);
 		printEndColor(DEBUG_LEVEL_INFO);
 	}
 }
@@ -119,7 +125,7 @@ void Logger::printW(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_WARN);
 		printHeader(DEBUG_LEVEL_WARN, file, line, false);
-		_serial.print(text);
+		_serial->print(text);
 		printEndColor(DEBUG_LEVEL_WARN);
 	}
 }
@@ -131,7 +137,7 @@ void Logger::printlnV(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_VERBOSE);
 		printHeader(DEBUG_LEVEL_VERBOSE, file, line, true);
-		_serial.println(text);
+		_serial->println(text);
 		printEndColor(DEBUG_LEVEL_VERBOSE);
 	}
 }
@@ -143,7 +149,7 @@ void Logger::printlnD(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_DEBUG);
 		printHeader(DEBUG_LEVEL_DEBUG, file, line, true);
-		_serial.println(text);
+		_serial->println(text);
 		printEndColor(DEBUG_LEVEL_DEBUG);
 	}
 }
@@ -155,7 +161,7 @@ void Logger::printlnI(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_INFO);
 		printHeader(DEBUG_LEVEL_INFO, file, line, true);
-		_serial.println(text);
+		_serial->println(text);
 		printEndColor(DEBUG_LEVEL_INFO);
 	}
 }
@@ -167,7 +173,7 @@ void Logger::printlnW(const String & text, const char * file, uint32_t line)
 	{
 		printStartColor(DEBUG_LEVEL_WARN);
 		printHeader(DEBUG_LEVEL_WARN, file, line, true);
-		_serial.println(text);
+		_serial->println(text);
 		printEndColor(DEBUG_LEVEL_WARN);
 	}
 }
@@ -177,19 +183,19 @@ void Logger::printStartColor(debug_level_t level)
 	switch (level)
 	{
 	case DEBUG_LEVEL_ERROR:
-		_serial.print(LOG_COLOR_E);
+		_serial->print(LOG_COLOR_E);
 		break;
 	case DEBUG_LEVEL_WARN:
-		_serial.print(LOG_COLOR_W);
+		_serial->print(LOG_COLOR_W);
 		break;
 	case DEBUG_LEVEL_INFO:
-		_serial.print(LOG_COLOR_I);
+		_serial->print(LOG_COLOR_I);
 		break;
 	case DEBUG_LEVEL_DEBUG:
-		_serial.print(LOG_COLOR_D);
+		_serial->print(LOG_COLOR_D);
 		break;
 	case DEBUG_LEVEL_VERBOSE:
-		_serial.print(LOG_COLOR_V);
+		_serial->print(LOG_COLOR_V);
 		break;
 	default:
 		break;
@@ -200,7 +206,7 @@ void Logger::printHeader(debug_level_t level, const char * file, uint32_t line, 
 {
 	if (_printIsNewline)
 	{
-		Serial.printf("%c %25s %4d : ", levelToChar(level), file, line);
+		_serial->printf("%c %25s %4d : ", levelToChar(level), file, line);
 		if(!isln)
 		{
 			_printIsNewline = false;
@@ -221,7 +227,7 @@ void Logger::printEndColor(debug_level_t level)
 	case DEBUG_LEVEL_INFO:
 	case DEBUG_LEVEL_DEBUG:
 	case DEBUG_LEVEL_VERBOSE:
-		_serial.print(LOG_RESET_COLOR);
+		_serial->print(LOG_RESET_COLOR);
 		break;
 	default:
 		break;

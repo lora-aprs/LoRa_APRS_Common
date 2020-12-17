@@ -24,7 +24,7 @@ public:
 
 	~Logger() {}
 
-	void setSerial(const HardwareSerial & serial = Serial);
+	void setSerial(HardwareSerial * serial);
 	void setDebugLevel(debug_level_t level);
 
 	// print always:
@@ -45,7 +45,7 @@ public:
 	void printlnW(const String & text, const char * file, uint32_t line);	// warning with new line
 
 private:
-	HardwareSerial & _serial;
+	HardwareSerial * _serial;
 	debug_level_t _level;
 	bool _printIsNewline;
 
@@ -59,17 +59,18 @@ private:
 	Logger & operator = (const Logger &);
 };
 
-#define logPrintA(text)		Logger::instance().printA(text, __FILE__, __LINE__)
-#define logPrintE(text)		Logger::instance().printE(text, __FILE__, __LINE__)
-#define logPrintlnA(text)	Logger::instance().printlnA(text, __FILE__, __LINE__)
-#define logPrintlnE(text)	Logger::instance().printlnE(text, __FILE__, __LINE__)
-#define logPrintV(text)		Logger::instance().printV(text, __FILE__, __LINE__)
-#define logPrintD(text)		Logger::instance().printD(text, __FILE__, __LINE__)
-#define logPrintI(text)		Logger::instance().printI(text, __FILE__, __LINE__)
-#define logPrintW(text)		Logger::instance().printW(text, __FILE__, __LINE__)
-#define logPrintlnV(text)	Logger::instance().printlnV(text, __FILE__, __LINE__)
-#define logPrintlnD(text)	Logger::instance().printlnD(text, __FILE__, __LINE__)
-#define logPrintlnI(text)	Logger::instance().printlnI(text, __FILE__, __LINE__)
-#define logPrintlnW(text)	Logger::instance().printlnW(text, __FILE__, __LINE__)
+#define __FILENAME__ (strrchr("/" __FILE__, '/') + 1)
+#define logPrintA(text)		Logger::instance().printA(text, __FILENAME__, __LINE__)
+#define logPrintE(text)		Logger::instance().printE(text, __FILENAME__, __LINE__)
+#define logPrintlnA(text)	Logger::instance().printlnA(text, __FILENAME__, __LINE__)
+#define logPrintlnE(text)	Logger::instance().printlnE(text, __FILENAME__, __LINE__)
+#define logPrintV(text)		Logger::instance().printV(text, __FILENAME__, __LINE__)
+#define logPrintD(text)		Logger::instance().printD(text, __FILENAME__, __LINE__)
+#define logPrintI(text)		Logger::instance().printI(text, __FILENAME__, __LINE__)
+#define logPrintW(text)		Logger::instance().printW(text, __FILENAME__, __LINE__)
+#define logPrintlnV(text)	Logger::instance().printlnV(text, __FILENAME__, __LINE__)
+#define logPrintlnD(text)	Logger::instance().printlnD(text, __FILENAME__, __LINE__)
+#define logPrintlnI(text)	Logger::instance().printlnI(text, __FILENAME__, __LINE__)
+#define logPrintlnW(text)	Logger::instance().printlnW(text, __FILENAME__, __LINE__)
 
 #endif

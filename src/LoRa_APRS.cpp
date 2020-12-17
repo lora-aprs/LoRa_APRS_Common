@@ -1,16 +1,12 @@
+#include "BoardFinder.h"
 #include <LoRa_APRS.h>
 #include <pins.h>
 
-LoRa_APRS::LoRa_APRS()
+LoRa_APRS::LoRa_APRS(std::shared_ptr<BoardConfig> boardConfig)
 	: _LastReceivedMsg(0), _RxFrequency(LORA_RX_FREQUENCY), _TxFrequency(LORA_TX_FREQUENCY)
 {
-	SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
-	setPins(LORA_CS, LORA_RST, LORA_IRQ);
-
-	setSpreadingFactor(LORA_SPREADING_FACTOR);
-	setSignalBandwidth(LORA_SIGNAL_BANDWIDTH);
-	setCodingRate4(LORA_CODING_RATE4);
-	enableCrc();
+	SPI.begin(boardConfig->LoraSck, boardConfig->LoraMiso, boardConfig->LoraMosi, boardConfig->LoraCS);
+	setPins(boardConfig->LoraCS, boardConfig->LoraReset, boardConfig->LoraIRQ);
 }
 
 bool LoRa_APRS::hasMessage()

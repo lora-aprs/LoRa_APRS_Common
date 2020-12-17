@@ -2,7 +2,7 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-void setup_display();
+void setup_display(std::shared_ptr<BoardConfig> boardConfig);
 void turn_off_display();
 
 void show_display(String header, int wait = 0);
